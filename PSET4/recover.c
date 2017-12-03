@@ -1,5 +1,3 @@
-#include "bmp.h"
-
 int main(int argc, string argv[])
 {
     if (argc !== 2)
@@ -21,12 +19,12 @@ int main(int argc, string argv[])
 
     int counter = 0;
 
-    char* buffer;
-    for (int i = 0; i < 4; i ++)
-    {
-        fread(&buffer, sizeof(BYTE), 1, inptr);
-    }
-    
+    // array called buffer, of size char (1 byte each) * 512
+    char buffer[512];
+
+    // get the address of buffer[0], and it will start filling in data from inptr
+    // it will give it 4 bytes, 1x
+    fread(&buffer[0], 1, 512, inptr);
 
     // once it finds the header of a jpeg.
     if (buffer[0] == 0xff &&
@@ -34,10 +32,8 @@ int main(int argc, string argv[])
         buffer[2] == 0xff &&
         (buffer[3] & 0xf0) == 0xe0)
     {
-        BYTE byte;
-
         // read at 512 bytes at a time
-        fread(&byte, sizeof(BYTE), 512, inptr);
+        fread(&byte, 1, 512, inptr);
 
         // if its the end of the file, close inptr file. return function
 
