@@ -1,6 +1,8 @@
-int main(int argc, string argv[])
+#include <stdio.h>
+
+int main(int argc, char* argv[])
 {
-    if (argc != = 2)
+    if (argc != 2)
     {
         fprintf(stderr, "This function takes one command line argument");
         return 1;
@@ -20,12 +22,12 @@ int main(int argc, string argv[])
     int counter = 0;
 
     // array called buffer, of size char (1 byte each) * 512
-    char buffer[512];
+    unsigned char buffer[512];
 
     // declare file pointer, set to NULL to show no file has been assigned to it yet.
     FILE *openNewFile = NULL;
 
-    
+
     //define filename. declaring an array of characters, length 8
     // to store a string
     char filename[8];
@@ -49,7 +51,7 @@ int main(int argc, string argv[])
                 counter = counter + 1;
             }
             // create a new jpeg file with the sequential naming counter + 1;
-            sprintf(filename[0], "%03i.jpg", counter);
+            sprintf(filename, "%03i.jpg", counter);
 
             // assign openNewFile to open jpeg
             openNewFile = fopen(filename, "w");
@@ -82,4 +84,4 @@ int main(int argc, string argv[])
 
 
 // null terminator = true 0 , end of strings
-// null pointer = points to 0, can be used at end of an array. 
+// null pointer = points to 0, can be used at end of an array.
