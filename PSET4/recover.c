@@ -1,6 +1,6 @@
 int main(int argc, string argv[])
 {
-    if (argc !== 2)
+    if (argc != = 2)
     {
         fprintf(stderr, "This function takes one command line argument");
         return 1;
@@ -22,33 +22,64 @@ int main(int argc, string argv[])
     // array called buffer, of size char (1 byte each) * 512
     char buffer[512];
 
-    // get the address of buffer[0], and it will start filling in data from inptr
-    // it will give it 4 bytes, 1x
-    fread(&buffer[0], 1, 512, inptr);
+    // declare file pointer, set to NULL to show no file has been assigned to it yet.
+    FILE *openNewFile = NULL;
 
-    // once it finds the header of a jpeg.
-    if (buffer[0] == 0xff &&
-        buffer[1] == 0xd8 && 
-        buffer[2] == 0xff &&
-        (buffer[3] & 0xf0) == 0xe0)
+    
+    //define filename. declaring an array of characters, length 8
+    // to store a string
+    char filename[8];
+
+    // while not at end of file, and fread is returning 512 bytes at a time.
+    while (fread(&buffer[0], 1, 512, inptr) == 512)
     {
-        // read at 512 bytes at a time
-        fread(&byte, 1, 512, inptr);
+        // once it finds the header of a jpeg. (start of new jpeg)
+        if (buffer[0] == 0xff &&
+            buffer[1] == 0xd8 &&
+            buffer[2] == 0xff &&
+            (buffer[3] & 0xf0) == 0xe0)
+        {
+            // if found a jpeg byte 
+            if (openNewFile != NULL)
+            {
+                // end previous jpeg
+                fclose(openNewFile);
 
-        // if its the end of the file, close inptr file. return function
+                // increment counter
+                counter = counter + 1;
+            }
+            // create a new jpeg file with the sequential naming counter + 1;
+            sprintf(filename[0], "%03i.jpg", counter);
 
-        // create a new jpeg file with the sequential naming counter + 1;
-        sprintf(filename, "%03i.jpg", counter);
-        FILE *img = fopen(filename, "w");
+            // assign openNewFile to open jpeg
+            openNewFile = fopen(filename, "w");
+        }
 
-        // once we reach the first 512 bytes block for jpeg, we continue reading and writing until another JPEG start
-        
-        fwrite(inptr, sizeof(BYTE), 512, img)
+        // if you are in a jpeg
+        if (openNewFile != NULL )
+        {
+            // write to new jpeg
+            fwrite(buffer, 1, 512, openNewFile);
+        }
 
-        // once it detects the end of the jpeg file, you close the new jpeg file
-        // end is when its less than 512 bytes before a new header
     }
-
-    // finish function
-
+    if (openNewFile == NULL)
+    {
+        // if at the end of reading through every 512 byte block, it has not found a jpeg header, it should return
+        fprintf(stderr, "Could not find a jpeg header");
+        return 3;
+    }
+    else
+    {
+        // close the inptr file
+        fclose(inptr);
+        // close previous jpeg file we are writing to
+        fclose(openNewFile);
+        // close function  (return 0 for success)
+        return 0;
+    }
 }
+
+
+// null terminator = true 0 , end of strings
+// null pointer = points to 0, can be used at end of an array. 
