@@ -39,7 +39,7 @@ int main(int argc, string argv[])
             buffer[2] == 0xff &&
             (buffer[3] & 0xf0) == 0xe0)
         {
-            // if found a jpeg byte 
+            // if found a jpeg byte , close current jpeg
             if (openNewFile != NULL)
             {
                 // end previous jpeg
@@ -55,7 +55,7 @@ int main(int argc, string argv[])
             openNewFile = fopen(filename, "w");
         }
 
-        // if you are in a jpeg
+        // if you are in a jpeg, write to a new jpeg
         if (openNewFile != NULL )
         {
             // write to new jpeg
