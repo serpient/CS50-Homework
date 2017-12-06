@@ -29,6 +29,8 @@ unsigned int size(void)
 }
 
 // Unloads dictionary from memory, returning true if successful else false
+// free any memory that was allocated in load. 
+// use valgrind to watch for leaks
 bool unload(void)
 {
     // TODO
